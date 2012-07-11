@@ -12,6 +12,8 @@ the map on.
 
 swmap depends on
 * jQuery
+* [Google Maps API](https://developers.google.com/maps/documentation/javascript/)
+* Your own Google Maps API key
 
 Then, include the swmap code on the page.
 
@@ -35,8 +37,13 @@ you want to use:
 '''javascript
 $(function () {
   $.swmap('#mapArea', {
-    country: 'USA',
-    since: '2010-01-01'
+    query: {
+      country: 'USA',
+      since: '2010-01-01'
+    },
+    mapSettings: {
+      center: new google.maps.LatLng(lat, lng)
+    }
   }); 
 });
 '''
