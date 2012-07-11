@@ -30,6 +30,11 @@
   buildQueryUrl = function (baseUrl, query) {
     var prop, finalUrl, queryTerms = [];
 
+    // Chop off the trailing slash if it exists
+    if (baseUrl[baseUrl.length - 1] === '/') {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+
     if (query && objectSize(query) > 0) {
       for (prop in query) {
         if (query.hasOwnProperty(prop)) {
@@ -66,10 +71,6 @@
 
     // Build the API URL based on query parameters
     // if they are supplied
-    if (settings.query !== null && objectSize(settings.query) > 0) {
-      apiUrl = buildQueryUrl(settings.url, settings.query);
-    } else {
-      apiUrl = settings.url;
-    }
+    apiUrl = buildQueryUrl(settings.url, settings.query);
   };
 }(jQuery));

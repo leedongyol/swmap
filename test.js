@@ -39,3 +39,16 @@ test('returns baseUrl with HTTP parameters', function () {
 
   equal(result, 'http://baseurl?country=USA&since=2010-01-01');
 });
+
+test('handles the case where the base URL has a trailing slash', function () {
+  var result, query;
+
+  query = {
+    country: 'USA',
+    since: '2010-01-01'
+  };
+
+  result = testHarness.buildQueryUrl('http://baseurl/', query);
+
+  equal(result, 'http://baseurl?country=USA&since=2010-01-01');
+});
