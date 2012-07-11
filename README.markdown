@@ -11,7 +11,8 @@ First, make sure you include the dependencies on the HTML page you want
 the map on.
 
 swmap depends on
-* jQuery
+* [jQuery](http://jquery.com/)
+* [moment.js](http://momentjs.com/)
 * [Google Maps API](https://developers.google.com/maps/documentation/javascript/)
 * Your own Google Maps API key
 
