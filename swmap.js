@@ -4,7 +4,8 @@
   // Functions
   var buildQueryUrl, testHarness, objectSize, 
       processEventData, initializeMap, filterUnusableEvents, 
-      addMarkersToMap, generateMapMarkers, generateMarkerTitle;
+      addMarkersToMap, generateMapMarkers, generateMarkerTitle,
+      showInfoWindow;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -87,7 +88,7 @@
    * for a map marker object
    */
   generateMarkerTitle = function (event) {
-    var titleString, titleTerms = [];
+    var titleString, actualUrl, titleTerms = [];
     titleTerms.push(event.city);
 
     if (event.state && event.state.length > 0) {
@@ -104,9 +105,15 @@
     }
 
     if (event.website && event.website.length > 0) {
+      if (event.website.indexOf('http') < 0) {
+        actualUrl = 'http://' + event.website;
+      } else {
+        actualUrl = event.website; 
+      }
+
       titleString += 
-        "<br /><a href='" + 
-        event.website +
+        "<br /><a target='_blank' href='" + 
+        actualUrl +
         "'>" +
         event.website +
         "</a>";
@@ -116,16 +123,33 @@
   if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
 
   /**
+   * Creates a pop-up info window over the marker when clicked
+   *
+   * @content - A string containing the text for the info window
+   * @map - The map to add the window to
+   * @marker - The marker the info window floats over
+   */
+  showInfoWindow = function (content, map, marker) {
+    var infowindow = new mapsApi.InfoWindow({
+      content: content
+    }); 
+
+    infowindow.open(map, marker);
+  };
+
+  /**
    * Given an array of event objects, generate map markers for them
    */
   generateMapMarkers = function (events) {
     var markers = [];
 
     $.each(events, function (idx, event) {
-      markers.push(new mapsApi.Marker({
+      var marker = new mapsApi.Marker({
         position: new mapsApi.LatLng(event.location['lat'], event.location['lng']),
         title: generateMarkerTitle(event)
-      }));
+      });
+
+      markers.push(marker);
     });
 
     return markers;
@@ -139,6 +163,11 @@
    */
   addMarkersToMap = function (map, markers) {
     $.each(markers, function (idx, marker) {
+      // Configure event listeners
+      mapsApi.event.addListener(marker, 'click', function () {
+        showInfoWindow(marker.title, map, marker);
+      });
+
       marker.setMap(map); 
     }); 
   };
