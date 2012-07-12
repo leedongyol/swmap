@@ -16,6 +16,8 @@
    * Given an object, return the number of keys
    */
   objectSize = function (obj) {
+    if(obj.length) { return obj.length; }
+
     var size = 0, key;
     for (key in obj) {
       if (obj.hasOwnProperty(key)) { size += 1; }

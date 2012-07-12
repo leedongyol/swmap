@@ -22,6 +22,13 @@ test('returns the key length for an object', function () {
   equal(result, 3);
 });
 
+test('also works on arrays', function () {
+  var arr = [1,2,3];
+
+  result = testHarness.objectSize(arr);
+  equal(result, 3);
+});
+
 module('buildQueryUrl tests');
 test('returns baseUrl for an empty query', function () {
   var result = testHarness.buildQueryUrl('http://baseurl', {});
