@@ -152,7 +152,7 @@ test('creates a title with all data available', function () {
 
   result = testHarness.generateMarkerTitle(event);
 
-  equal(result, "Seattle, WA, USA<br />Jan 1, 2012<br /><a href='http://startupweekend.org'>http://startupweekend.org</a>");
+  equal(result, "Seattle, WA, USA<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
 });
 
 test('creates a title with some location data missing', function () {
@@ -164,7 +164,7 @@ test('creates a title with some location data missing', function () {
 
   result = testHarness.generateMarkerTitle(event);
 
-  equal(result, "Seattle<br />Jan 1, 2012<br /><a href='http://startupweekend.org'>http://startupweekend.org</a>");
+  equal(result, "Seattle<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
 });
 
 test('creates a title with some location data missing', function () {
