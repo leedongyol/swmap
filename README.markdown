@@ -20,6 +20,8 @@ Then, include the swmap code on the page.
 
 ```html
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=true"></script>
+<script src="/js/moment.js"></script>
 <script scr="/js/swmap.js"></script>
 ```
 
