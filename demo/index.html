@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <style type="text/css">
+    html { height: 100% }
+    body  { height: 100%; margin: 0; padding: 0; }
+    #map {
+      height: 50%;
+      width: 50%;
+    }
+  </style>
+  <title>SWMap Demo</title>
+</head>
+<body>
+  <div id="map" style="width: 50%; height: 50%;"></div>
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+  <script src="../js/moment.min.js"></script>
+  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBG4fRcgwz8GlmKiDEDYa56OkoCAx9dmuQ&sensor=true"></script>
+  <script src="../swmap.js"></script>
+  <script>
+    $(function () {
+      $('#map').swmap({
+        query: {
+          country: 'mexico',
+          since: '2012-01-01'
+        },
+        mapSettings: {
+          center: new google.maps.LatLng(25.165, -103.183),
+          zoom: 6,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      });
+    });
+  </script> 
+</body>
+</html>
