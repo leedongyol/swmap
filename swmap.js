@@ -161,6 +161,13 @@
     getInfoWindowInstance().open(map, marker);
   };
 
+  /**
+   * Uses the Google Charts API to create a styled image
+   * for the marker.
+   *
+   * @color - A string representing the hex value for the marker color. Do not include a '#'
+   * @showDot - A boolean to determine whether a dot should be shown on the marker
+   */
   createStyledMarkerImage = function (color, showDot) {
     var url;
 
@@ -175,6 +182,9 @@
         new mapsApi.Point(10, 34));
   }
 
+  /**
+   * Uses the Google Charts API to create a shadow for a marker
+   */
   createStyleMarkersShadow = function () {
     var url = "http://chart.apis.google.com/chart?chst=d_map_pin_shadow";
     return new mapsApi.MarkerImage(url,
