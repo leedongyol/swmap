@@ -207,13 +207,13 @@
       // Figure out the logic for the map styles
 
       // Does the client care about past/future events?
-      if (markerSettings['pastEvents'] && markerSettings['futureEvents']) {
+      if (markerSettings['pastEvents'] || markerSettings['futureEvents']) {
         currentDay = moment().utc();
         if (moment(event.start_date).utc().diff(currentDay) >= 0) {
           // Future styling 
           if (markerSettings.futureEvents) {
-            markerColor = markerSettings.futureEvents.color || markerSettings.color;
-            markerDot = markerSettings.futureEvents.showDot || markerSettings.showDot;
+            markerColor = markerSettings.futureEvents.color == null ? markerSettings.color : markerSettings.futureEvents.color;
+            markerDot = markerSettings.futureEvents.showDot == null ? markerSettings.showDot : markerSettings.futureEvents.showDot;
           } else {
             // Client didn't provide future event styling!!!
             // Use the default color so there is at least some differentiation
@@ -223,8 +223,8 @@
         } else {
           // Past styling 
           if (markerSettings.pastEvents) {
-            markerColor = markerSettings.pastEvents.color || markerSettings.color;
-            markerDot = markerSettings.pastEvents.showDot || markerSettings.showDot;
+            markerColor = markerSettings.pastEvents.color == null ? markerSettings.color : markerSettings.pastEvents.color
+            markerDot = markerSettings.pastEvents.showDot == null ? markerSettings.showDot : markerSettings.pastEvents.showDot;
           } else {
             // Client didn't provide past event styling!!!
             // Use the default color so there is at least some differentiation
