@@ -5,7 +5,7 @@
   var buildQueryUrl, testHarness, objectSize, 
       processEventData, initializeMap, filterUnusableEvents, 
       addMarkersToMap, generateMapMarkers, generateMarkerTitle,
-      showInfoWindow;
+      showInfoWindow, getInfoWindowInstance;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -122,6 +122,17 @@
   };
   if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
 
+  getInfoWindowInstance = function (map) {
+    var infoWindowInstance = new mapsApi.InfoWindow({
+      map: map
+    });
+
+    // Javascript mystery function rewriting action
+    getInfoWindowInstance = function () {
+      return infoWindowInstance;
+    };
+  };
+
   /**
    * Creates a pop-up info window over the marker when clicked
    *
@@ -130,11 +141,8 @@
    * @marker - The marker the info window floats over
    */
   showInfoWindow = function (content, map, marker) {
-    var infowindow = new mapsApi.InfoWindow({
-      content: content
-    }); 
-
-    infowindow.open(map, marker);
+    getInfoWindowInstance().setContent(content);
+    getInfoWindowInstance().open(map, marker);
   };
 
   /**
@@ -183,6 +191,9 @@
 
     // Create the map
     map = initializeMap(domElement, settings.mapSettings);
+
+    // Initialize info window instance
+    getInfoWindowInstance(map);
 
     // Loop through the events returned from the server and filter
     // out those that don't meet the criteria for our map
