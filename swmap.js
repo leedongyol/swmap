@@ -202,10 +202,46 @@
     var markers = [];
 
     $.each(events, function (idx, event) {
+      var currentDay, markerColor, markerDot = false;
+     
+      // Figure out the logic for the map styles
+
+      // Does the client care about past/future events?
+      if (markerSettings['pastEvents'] && markerSettings['futureEvents']) {
+        currentDay = moment().utc();
+        if (moment(event.start_date).utc().diff(currentDay) >= 0) {
+          // Future styling 
+          if (markerSettings.futureEvents) {
+            markerColor = markerSettings.futureEvents.color || markerSettings.color;
+            markerDot = markerSettings.futureEvents.showDot || markerSettings.showDot;
+          } else {
+            // Client didn't provide future event styling!!!
+            // Use the default color so there is at least some differentiation
+            markerColor = markerSettings.color;
+            markerDot = markerSettings.showDot;
+          }
+        } else {
+          // Past styling 
+          if (markerSettings.pastEvents) {
+            markerColor = markerSettings.pastEvents.color || markerSettings.color;
+            markerDot = markerSettings.pastEvents.showDot || markerSettings.showDot;
+          } else {
+            // Client didn't provide past event styling!!!
+            // Use the default color so there is at least some differentiation
+            markerColor = markerSettings.color;
+            markerDot = markerSettings.showDot;
+          }
+        }
+      } else {
+        // Either the user overwrote the default settings or we are using the defaults
+        markerColor = markerSettings.color;
+        markerDot = markerSettings.showDot;
+      }
+
       var marker = new mapsApi.Marker({
         position: new mapsApi.LatLng(event.location['lat'], event.location['lng']),
         title: generateMarkerTitle(event),
-        icon: createStyledMarkerImage(markerSettings.color, markerSettings.showDot),
+        icon: createStyledMarkerImage(markerColor, markerDot),
         shadow: createStyleMarkersShadow()
       });
 
