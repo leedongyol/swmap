@@ -5,7 +5,8 @@
   var buildQueryUrl, testHarness, objectSize, 
       processEventData, initializeMap, filterUnusableEvents, 
       addMarkersToMap, generateMapMarkers, generateMarkerTitle,
-      showInfoWindow, getInfoWindowInstance;
+      showInfoWindow, getInfoWindowInstance, createStyledMarkerImage,
+      createStyleMarkersShadow;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -160,16 +161,40 @@
     getInfoWindowInstance().open(map, marker);
   };
 
+  createStyledMarkerImage = function (color, showDot) {
+    var url;
+
+    url = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + color;
+    if (showDot === false) {
+      url += "|" + color;
+    } 
+
+    return new mapsApi.MarkerImage(url,
+        new mapsApi.Size(21, 34),
+        new mapsApi.Point(0, 0),
+        new mapsApi.Point(10, 34));
+  }
+
+  createStyleMarkersShadow = function () {
+    var url = "http://chart.apis.google.com/chart?chst=d_map_pin_shadow";
+    return new mapsApi.MarkerImage(url,
+        new mapsApi.Size(40, 37),
+        new mapsApi.Point(0, 0),
+        new mapsApi.Point(12, 35)); 
+  };
+
   /**
    * Given an array of event objects, generate map markers for them
    */
-  generateMapMarkers = function (events) {
+  generateMapMarkers = function (events, markerSettings) {
     var markers = [];
 
     $.each(events, function (idx, event) {
       var marker = new mapsApi.Marker({
         position: new mapsApi.LatLng(event.location['lat'], event.location['lng']),
-        title: generateMarkerTitle(event)
+        title: generateMarkerTitle(event),
+        icon: createStyledMarkerImage(markerSettings.color, markerSettings.showDot),
+        shadow: createStyleMarkersShadow()
       });
 
       markers.push(marker);
@@ -214,7 +239,7 @@
     // out those that don't meet the criteria for our map
     eventWorkingSet = filterUnusableEvents(data);
 
-    markers = generateMapMarkers(eventWorkingSet);
+    markers = generateMapMarkers(eventWorkingSet, settings.markerSettings);
     addMarkersToMap(map, markers);
   };
   if (testHarness) { testHarness.processEventData = processEventData; }
@@ -227,9 +252,12 @@
    * @opts - The settings for the map plugin
    */
   $.fn.swmap = function (opts) {
-    var defaults, settings, apiUrl, domElement, defaultMapSettings, userMapSettings;
+    var defaults, settings, apiUrl, domElement, 
+        defaultMapSettings, userMapSettings, defaultMarkerSettings,
+        userMarkerSettings;
 
     userMapSettings = opts.mapSettings;
+    userMarkerSettings = opts.markerSettings;
 
     defaults = {
       url: 'http://swoop.startupweekend.org/events',
@@ -245,12 +273,17 @@
       mapTypeId: mapsApi.MapTypeId.ROADMAP
     };
 
+    defaultMarkerSettings = {
+      color: "FE7569",
+      showDot: true
+    };
     
     // Grab the client's options and set up options
     // with defaults for settings that weren't specified
     settings = $.extend(defaults, opts);
 
     settings.mapSettings = $.extend(defaultMapSettings, userMapSettings);
+    settings.markerSettings = $.extend(defaultMarkerSettings, userMarkerSettings);
 
     // Build the API URL based on query parameters
     // if they are supplied
