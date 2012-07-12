@@ -37,13 +37,17 @@ you want to use:
 
 ```javascript
 $(function () {
-  $.swmap('#mapArea', {
+  $('#mapArea').swmap({
     query: {
       country: 'USA',
       since: '2010-01-01'
     },
     mapSettings: {
       center: new google.maps.LatLng(lat, lng)
+    },
+    markerSettings: {
+      color: '333333',
+      showDot: false
     }
   }); 
 });
