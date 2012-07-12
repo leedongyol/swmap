@@ -1,8 +1,10 @@
 "use strict";
 
-(function ($, mapsApi) {
+(function ($, mapsApi, moment) {
+  // Functions
   var buildQueryUrl, testHarness, objectSize, 
-      processEventData, initializeMap, filterUnusableEvents;
+      processEventData, initializeMap, filterUnusableEvents, 
+      addMarkersToMap, generateMapMarkers, generateMarkerTitle;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -81,19 +83,84 @@
   if (testHarness) { testHarness.filterUnusableEvents = filterUnusableEvents; }
 
   /**
+   * Given an event object, generate a title suitable
+   * for a map marker object
+   */
+  generateMarkerTitle = function (event) {
+    var titleString, titleTerms = [];
+    titleTerms.push(event.city);
+
+    if (event.state && event.state.length > 0) {
+      titleTerms.push(event.state);
+    }
+    if (event.country && event.country.length > 0) {
+      titleTerms.push(event.country);
+    }
+    
+    titleString = titleTerms.join(', ');
+
+    if (event.start_date) {
+      titleString += "<br />" + moment(event.start_date).utc().format("MMM D, YYYY");
+    }
+
+    if (event.website && event.website.length > 0) {
+      titleString += 
+        "<br /><a href='" + 
+        event.website +
+        "'>" +
+        event.website +
+        "</a>";
+    }
+    return titleString;
+  };
+  if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
+
+  /**
+   * Given an array of event objects, generate map markers for them
+   */
+  generateMapMarkers = function (events) {
+    var markers = [];
+
+    $.each(events, function (idx, event) {
+      markers.push(new mapsApi.Marker({
+        position: new mapsApi.LatLng(event.location['lat'], event.location['lng']),
+        title: generateMarkerTitle(event)
+      }));
+    });
+
+    return markers;
+  };
+  
+  /**
+   * Takes a series of Google Maps markers and adds them to the map
+   *
+   * @map - An already instantiated Google Map object
+   * @events - An array of Google Map Marker objects
+   */
+  addMarkersToMap = function (map, markers) {
+    $.each(markers, function (idx, marker) {
+      marker.setMap(map); 
+    }); 
+  };
+
+  /**
    * A function to receive data from the API server, process
    * it, and kick off other processing activity
    *
    * @data - An array of JSON objects representing events
    */
   processEventData = function (data, settings) {
-    var map, eventWorkingSet;
+    var map, eventWorkingSet, markers;
 
+    // Create the map
     map = initializeMap(settings.mapId, settings.mapSettings);
 
     // Loop through the events returned from the server and filter
     // out those that don't meet the criteria for our map
     eventWorkingSet = filterUnusableEvents(data);
+
+    markers = generateMapMarkers(eventWorkingSet);
+    addMarkersToMap(map, eventWorkingSet);
   };
   if (testHarness) { testHarness.processEventData = processEventData; }
 
@@ -132,7 +199,7 @@
     $.ajax({
       dataType: 'jsonp',
       url: apiUrl,
-      success: function (data) { processEventData (data, settings); }
+      success: function (data) { processEventData(data, settings); }
     });
   };
-}(jQuery, google.maps));
+}(jQuery, google.maps, moment));
