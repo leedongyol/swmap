@@ -138,6 +138,8 @@
     getInfoWindowInstance = function () {
       return infoWindowInstance;
     };
+
+    return infoWindowInstance;
   };
 
   /**
