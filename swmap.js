@@ -174,23 +174,28 @@
   $.fn.swmap = function (opts) {
     var defaults, settings, apiUrl, domElement, defaultMapSettings, userMapSettings;
 
+    userMapSettings = opts.mapSettings;
+
     defaults = {
       url: 'http://swoop.startupweekend.org/events',
-      query: {},
-      mapSettings: {
-        center: new mapsApi.LatLng(30, 20),
-        zoom: 2,
-        minZoom: 2,
-        maxZoom: 8,
-        zoomControl: true,
-        mapTypeId: mapsApi.MapTypeId.ROADMAP
-      }
+      query: {}
     };
 
-    defaultMapSettings: 
+    defaultMapSettings = {
+      center: new mapsApi.LatLng(30, 20),
+      zoom: 2,
+      minZoom: 2,
+      maxZoom: 8,
+      zoomControl: true,
+      mapTypeId: mapsApi.MapTypeId.ROADMAP
+    };
+
+    
     // Grab the client's options and set up options
     // with defaults for settings that weren't specified
     settings = $.extend(defaults, opts);
+
+    settings.mapSettings = $.extend(defaultMapSettings, userMapSettings);
 
     // Build the API URL based on query parameters
     // if they are supplied
