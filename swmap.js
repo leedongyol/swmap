@@ -129,6 +129,12 @@
   };
   if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
 
+  /**
+   * Creates an info window instance if it doesn't already exist
+   * and returns that instance everytime it is invoked thereafter
+   *
+   * @map - The map the info window is bound to
+   */
   getInfoWindowInstance = function (map) {
     var infoWindowInstance = new mapsApi.InfoWindow({
       map: map
