@@ -55,7 +55,8 @@ what other API query options are available to you.
 
 ## Development and Testing
 
-To run the tests for swmap, open test.html in your web browser.
+Tests are written with [QUnit](http://qunitjs.com/cookbook/). To run the tests for swmap,
+open test.html in your web browser.
 
 To run jslint on the project locally, pull down [jslint](https://github.com/reid/node-jslint)
 on npm and run it on `swmap.js`.
