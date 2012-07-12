@@ -14,7 +14,7 @@
   <title>SWMap Demo</title>
 </head>
 <body>
-  <div id="map" style="width: 50%; height: 50%;"></div>
+  <div id="map"></div>
 
   <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
   <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
@@ -30,8 +30,7 @@
         },
         mapSettings: {
           center: new google.maps.LatLng(25.165, -103.183),
-          zoom: 6,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+          zoom: 6
         }
       });
     });
