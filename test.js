@@ -138,3 +138,44 @@ test('only takes events with latitude and longitude', function () {
   
   equal(result.length, 1);
 });
+
+module('generateMarkerTitle tests');
+
+test('creates a title with all data available', function () {
+  var result, event = {
+    city: 'Seattle',
+    state: 'WA',
+    country: 'USA',
+    website: 'http://startupweekend.org',
+    start_date: moment('2012-01-01').utc()._d
+  };
+
+  result = testHarness.generateMarkerTitle(event);
+
+  equal(result, "Seattle, WA, USA<br />Jan 1, 2012<br /><a href='http://startupweekend.org'>http://startupweekend.org</a>");
+});
+
+test('creates a title with some location data missing', function () {
+  var result, event = {
+    city: 'Seattle',
+    website: 'http://startupweekend.org',
+    start_date: moment('2012-01-01').utc()._d
+  };
+
+  result = testHarness.generateMarkerTitle(event);
+
+  equal(result, "Seattle<br />Jan 1, 2012<br /><a href='http://startupweekend.org'>http://startupweekend.org</a>");
+});
+
+test('creates a title with some location data missing', function () {
+  var result, event = {
+    city: 'Seattle',
+    state: 'WA',
+    country: 'USA',
+    start_date: moment('2012-01-01').utc()._d
+  };
+
+  result = testHarness.generateMarkerTitle(event);
+
+  equal(result, "Seattle, WA, USA<br />Jan 1, 2012");
+});
