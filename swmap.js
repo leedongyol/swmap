@@ -60,7 +60,14 @@
    * the instance
    */
   initializeMap = function (domElement, mapOptions) {
-    return new mapsApi.Map(domElement, mapOptions);
+    var map = new mapsApi.Map(domElement, mapOptions);
+    
+    // Close the info window if the user clicks the map
+    mapsApi.event.addListener(map, 'click', function () {
+      getInfoWindowInstance().close(); 
+    });
+
+    return map;
   }
 
   /**
