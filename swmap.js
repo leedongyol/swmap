@@ -58,8 +58,8 @@
    * Initialize the map via the Google Maps API and return
    * the instance
    */
-  initializeMap = function (mapId, mapOptions) {
-    return new mapsApi.Map($(mapId), mapOptions); 
+  initializeMap = function (domElement, mapOptions) {
+    return new mapsApi.Map(domElement, mapOptions);
   }
 
   /**
@@ -149,18 +149,18 @@
    *
    * @data - An array of JSON objects representing events
    */
-  processEventData = function (data, settings) {
+  processEventData = function (data, settings, domElement) {
     var map, eventWorkingSet, markers;
 
     // Create the map
-    map = initializeMap(settings.mapId, settings.mapSettings);
+    map = initializeMap(domElement, settings.mapSettings);
 
     // Loop through the events returned from the server and filter
     // out those that don't meet the criteria for our map
     eventWorkingSet = filterUnusableEvents(data);
 
     markers = generateMapMarkers(eventWorkingSet);
-    addMarkersToMap(map, eventWorkingSet);
+    addMarkersToMap(map, markers);
   };
   if (testHarness) { testHarness.processEventData = processEventData; }
 
@@ -171,23 +171,23 @@
    * @mapId - The CSS selector for the area to render the map
    * @opts - The settings for the map plugin
    */
-  $.fn.swmap = function (mapId, opts) {
-    var defaults, settings, apiUrl;
+  $.fn.swmap = function (opts) {
+    var defaults, settings, apiUrl, domElement, defaultMapSettings, userMapSettings;
 
     defaults = {
       url: 'http://swoop.startupweekend.org/events',
       query: {},
-      mapId: mapId,
       mapSettings: {
         center: new mapsApi.LatLng(30, 20),
         zoom: 2,
         minZoom: 2,
         maxZoom: 8,
         zoomControl: true,
-        mapsTypeId: mapsApi.MapTypeId.ROADMAP
+        mapTypeId: mapsApi.MapTypeId.ROADMAP
       }
     };
 
+    defaultMapSettings: 
     // Grab the client's options and set up options
     // with defaults for settings that weren't specified
     settings = $.extend(defaults, opts);
@@ -195,11 +195,12 @@
     // Build the API URL based on query parameters
     // if they are supplied
     apiUrl = buildQueryUrl(settings.url, settings.query);
+    domElement = this[0];
 
     $.ajax({
       dataType: 'jsonp',
       url: apiUrl,
-      success: function (data) { processEventData(data, settings); }
+      success: function (data) { processEventData(data, settings, domElement); }
     });
   };
 }(jQuery, google.maps, moment));
