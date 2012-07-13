@@ -5,6 +5,11 @@ A jQuery plugin to assist in creating a Startup Weekend event map for a website.
 This tool will leverage the Startup Weekend SWOOP API to pull a list of events
 that respects a given query.
 
+## Changelog
+
+* v1.0.1 - 2012-07-13 - Minified version
+* v1.0.0 - 2012-07-12 - Initial Release
+
 ## Usage
 
 First, make sure you include the dependencies on the HTML page you want
