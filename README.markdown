@@ -16,13 +16,14 @@ swmap depends on
 * [Google Maps API](https://developers.google.com/maps/documentation/javascript/)
 * Your own Google Maps API key
 
-Then, include the swmap code on the page.
+Then, include the swmap code on the page. Feel free to use the minified
+version in production.
 
 ```html
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=true"></script>
 <script src="/js/moment.js"></script>
-<script scr="/js/swmap.js"></script>
+<script scr="/js/swmap.min.js"></script>
 ```
 
 Once that is done, make sure there is an area on the page defined
@@ -70,3 +71,6 @@ on npm and run it on `swmap.js`.
 These are the recommended jslint settings:
 
 `jslint swmap.js --indent 2 --windows true --browser true`
+
+We use [uglify-js](https://github.com/mishoo/UglifyJS) to generate minified versions of
+our code.
