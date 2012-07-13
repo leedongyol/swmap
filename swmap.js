@@ -2,11 +2,11 @@
 
 (function ($, mapsApi, moment) {
   // Functions
-  var buildQueryUrl, testHarness, objectSize, 
-      processEventData, initializeMap, filterUnusableEvents, 
-      addMarkersToMap, generateMapMarkers, generateMarkerTitle,
-      showInfoWindow, getInfoWindowInstance, createStyledMarkerImage,
-      createStyleMarkersShadow;
+  var buildQueryUrl, testHarness, objectSize,
+    processEventData, initializeMap, filterUnusableEvents,
+    addMarkersToMap, generateMapMarkers, generateMarkerTitle,
+    showInfoWindow, getInfoWindowInstance, createStyledMarkerImage,
+    createStyleMarkersShadow;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -16,7 +16,7 @@
    * Given an object, return the number of keys
    */
   objectSize = function (obj) {
-    if(obj.length) { return obj.length; }
+    if (obj.length) { return obj.length; }
 
     var size = 0, key;
     for (key in obj) {
@@ -64,14 +64,14 @@
    */
   initializeMap = function (domElement, mapOptions) {
     var map = new mapsApi.Map(domElement, mapOptions);
-    
+
     // Close the info window if the user clicks the map
     mapsApi.event.addListener(map, 'click', function () {
-      getInfoWindowInstance().close(); 
+      getInfoWindowInstance().close();
     });
 
     return map;
-  }
+  };
 
   /**
    * Given a list of events, only return the ones we can
@@ -83,10 +83,10 @@
     var goodEvents = [];
     $.each(events, function (idx, event) {
       if (event.event_status && (event.event_status === 'G' || event.event_status === 'W')) {
-        if (event.location && event.location['lat'] && event.location['lng']) {
+        if (event.location && event.location.lat && event.location.lng) {
           goodEvents.push(event);
-        } 
-      } 
+        }
+      }
     });
 
     return goodEvents;
@@ -107,7 +107,7 @@
     if (event.country && event.country.length > 0) {
       titleTerms.push(event.country);
     }
-    
+
     titleString = titleTerms.join(', ');
 
     if (event.start_date) {
@@ -118,11 +118,11 @@
       if (event.website.indexOf('http') < 0) {
         actualUrl = 'http://' + event.website;
       } else {
-        actualUrl = event.website; 
+        actualUrl = event.website;
       }
 
-      titleString += 
-        "<br /><a target='_blank' href='" + 
+      titleString +=
+        "<br /><a target='_blank' href='" +
         actualUrl +
         "'>" +
         event.website +
@@ -176,13 +176,13 @@
     url = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + color;
     if (showDot === false) {
       url += "|" + color;
-    } 
+    }
 
     return new mapsApi.MarkerImage(url,
         new mapsApi.Size(21, 34),
         new mapsApi.Point(0, 0),
         new mapsApi.Point(10, 34));
-  }
+  };
 
   /**
    * Uses the Google Charts API to create a shadow for a marker
@@ -192,7 +192,7 @@
     return new mapsApi.MarkerImage(url,
         new mapsApi.Size(40, 37),
         new mapsApi.Point(0, 0),
-        new mapsApi.Point(12, 35)); 
+        new mapsApi.Point(12, 35));
   };
 
   /**
@@ -202,18 +202,20 @@
     var markers = [];
 
     $.each(events, function (idx, event) {
-      var currentDay, markerColor, markerDot = false;
-     
+      var currentDay, markerColor, markerDot = false, marker;
+
       // Figure out the logic for the map styles
 
       // Does the client care about past/future events?
-      if (markerSettings['pastEvents'] || markerSettings['futureEvents']) {
+      if (markerSettings.pastEvents || markerSettings.futureEvents) {
         currentDay = moment().utc();
         if (moment(event.start_date).utc().diff(currentDay) >= 0) {
-          // Future styling 
+          // Future styling
           if (markerSettings.futureEvents) {
-            markerColor = markerSettings.futureEvents.color == null ? markerSettings.color : markerSettings.futureEvents.color;
-            markerDot = markerSettings.futureEvents.showDot == null ? markerSettings.showDot : markerSettings.futureEvents.showDot;
+            markerColor =
+              markerSettings.futureEvents.color === null ? markerSettings.color : markerSettings.futureEvents.color;
+            markerDot =
+              markerSettings.futureEvents.showDot === null ? markerSettings.showDot : markerSettings.futureEvents.showDot;
           } else {
             // Client didn't provide future event styling!!!
             // Use the default color so there is at least some differentiation
@@ -221,10 +223,10 @@
             markerDot = markerSettings.showDot;
           }
         } else {
-          // Past styling 
+          // Past styling
           if (markerSettings.pastEvents) {
-            markerColor = markerSettings.pastEvents.color == null ? markerSettings.color : markerSettings.pastEvents.color
-            markerDot = markerSettings.pastEvents.showDot == null ? markerSettings.showDot : markerSettings.pastEvents.showDot;
+            markerColor = markerSettings.pastEvents.color === null ? markerSettings.color : markerSettings.pastEvents.color;
+            markerDot = markerSettings.pastEvents.showDot === null ? markerSettings.showDot : markerSettings.pastEvents.showDot;
           } else {
             // Client didn't provide past event styling!!!
             // Use the default color so there is at least some differentiation
@@ -238,8 +240,8 @@
         markerDot = markerSettings.showDot;
       }
 
-      var marker = new mapsApi.Marker({
-        position: new mapsApi.LatLng(event.location['lat'], event.location['lng']),
+      marker = new mapsApi.Marker({
+        position: new mapsApi.LatLng(event.location.lat, event.location.lng),
         title: generateMarkerTitle(event),
         icon: createStyledMarkerImage(markerColor, markerDot),
         shadow: createStyleMarkersShadow()
@@ -250,7 +252,7 @@
 
     return markers;
   };
-  
+
   /**
    * Takes a series of Google Maps markers and adds them to the map
    *
@@ -264,8 +266,8 @@
         showInfoWindow(marker.title, map, marker);
       });
 
-      marker.setMap(map); 
-    }); 
+      marker.setMap(map);
+    });
   };
 
   /**
@@ -300,9 +302,9 @@
    * @opts - The settings for the map plugin
    */
   $.fn.swmap = function (opts) {
-    var defaults, settings, apiUrl, domElement, 
-        defaultMapSettings, userMapSettings, defaultMarkerSettings,
-        userMarkerSettings;
+    var defaults, settings, apiUrl, domElement,
+      defaultMapSettings, userMapSettings, defaultMarkerSettings,
+      userMarkerSettings;
 
     userMapSettings = opts.mapSettings;
     userMarkerSettings = opts.markerSettings;
@@ -325,7 +327,7 @@
       color: "FE7569",
       showDot: true
     };
-    
+
     // Grab the client's options and set up options
     // with defaults for settings that weren't specified
     settings = $.extend(defaults, opts);
