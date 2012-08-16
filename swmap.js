@@ -126,7 +126,7 @@ SOFTWARE.
     if (titleSettings.startDate) { titleString += getStartDateFormatted(event); }
     if (titleSettings.url) { titleString += getURL(event); }
 
-    return titleString;
+    return "<p>" + titleString + "</p>";
   };
   if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
 

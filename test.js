@@ -162,7 +162,7 @@ test('creates a title with all data available', function () {
 
   result = testHarness.generateMarkerTitle(event, titleSettings);
 
-  equal(result, "Seattle, WA, USA<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
+  equal(result, "<p>Seattle, WA, USA<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a></p>");
 });
 
 test('creates a title with some location data missing', function () {
@@ -177,7 +177,7 @@ test('creates a title with some location data missing', function () {
 
   result = testHarness.generateMarkerTitle(event, titleSettings);
 
-  equal(result, "Seattle<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
+  equal(result, "<p>Seattle<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a></p>");
 });
 
 test('creates a title with some location data missing', function () {
@@ -193,7 +193,7 @@ test('creates a title with some location data missing', function () {
 
   result = testHarness.generateMarkerTitle(event, titleSettings);
 
-  equal(result, "Seattle, WA, USA<br />Jan 1, 2012");
+  equal(result, "<p>Seattle, WA, USA<br />Jan 1, 2012</p>");
 });
 
 test("disabling url in title", function () {
@@ -210,7 +210,7 @@ test("disabling url in title", function () {
 
   result = testHarness.generateMarkerTitle(event, titleSettings);
 
-  equal(result, "Seattle, WA, USA<br />Jan 1, 2012");
+  equal(result, "<p>Seattle, WA, USA<br />Jan 1, 2012</p>");
 });
 
 test("disabling startDate in the title", function () {
@@ -227,7 +227,7 @@ test("disabling startDate in the title", function () {
 
   result = testHarness.generateMarkerTitle(event, titleSettings);
 
-  equal(result, "Seattle, WA, USA<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
+  equal(result, "<p>Seattle, WA, USA<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a></p>");
 });
 
 test("disabling title and startDate in the title", function () {
@@ -244,5 +244,5 @@ test("disabling title and startDate in the title", function () {
 
   result = testHarness.generateMarkerTitle(event, titleSettings);
 
-  equal(result, "Seattle, WA, USA");
+  equal(result, "<p>Seattle, WA, USA</p>");
 });
