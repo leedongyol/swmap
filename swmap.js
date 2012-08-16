@@ -390,7 +390,7 @@ SOFTWARE.
 
     settings.mapSettings = $.extend(defaultMapSettings, userMapSettings);
     settings.markerSettings = $.extend(defaultMarkerSettings, userMarkerSettings);
-    settings.TitleSettings = $.extend(defaultTitleSettings, userTitleSettings);
+    settings.titleSettings = $.extend(defaultTitleSettings, userTitleSettings);
 
     // Build the API URL based on query parameters
     // if they are supplied
