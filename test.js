@@ -155,9 +155,12 @@ test('creates a title with all data available', function () {
     country: 'USA',
     website: 'http://startupweekend.org',
     start_date: moment('2012-01-01').utc()._d
+  }, titleSettings = {
+    startDate: true,
+    url: true
   };
 
-  result = testHarness.generateMarkerTitle(event);
+  result = testHarness.generateMarkerTitle(event, titleSettings);
 
   equal(result, "Seattle, WA, USA<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
 });
@@ -167,9 +170,12 @@ test('creates a title with some location data missing', function () {
     city: 'Seattle',
     website: 'http://startupweekend.org',
     start_date: moment('2012-01-01').utc()._d
+  }, titleSettings = {
+    startDate: true,
+    url: true
   };
 
-  result = testHarness.generateMarkerTitle(event);
+  result = testHarness.generateMarkerTitle(event, titleSettings);
 
   equal(result, "Seattle<br />Jan 1, 2012<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
 });
@@ -180,9 +186,63 @@ test('creates a title with some location data missing', function () {
     state: 'WA',
     country: 'USA',
     start_date: moment('2012-01-01').utc()._d
+  }, titleSettings = {
+    startDate: true,
+    url: true
   };
 
-  result = testHarness.generateMarkerTitle(event);
+  result = testHarness.generateMarkerTitle(event, titleSettings);
 
   equal(result, "Seattle, WA, USA<br />Jan 1, 2012");
+});
+
+test("disabling url in title", function () {
+  var result, event = {
+    city: 'Seattle',
+    state: 'WA',
+    country: 'USA',
+    website: 'http://startupweekend.org',
+    start_date: moment('2012-01-01').utc()._d
+  }, titleSettings = {
+    startDate: true,
+    url: false
+  };
+
+  result = testHarness.generateMarkerTitle(event, titleSettings);
+
+  equal(result, "Seattle, WA, USA<br />Jan 1, 2012");
+});
+
+test("disabling startDate in the title", function () {
+  var result, event = {
+    city: 'Seattle',
+    state: 'WA',
+    country: 'USA',
+    website: 'http://startupweekend.org',
+    start_date: moment('2012-01-01').utc()._d
+  }, titleSettings = {
+    startDate: false,
+    url: true
+  };
+
+  result = testHarness.generateMarkerTitle(event, titleSettings);
+
+  equal(result, "Seattle, WA, USA<br /><a target='_blank' href='http://startupweekend.org'>http://startupweekend.org</a>");
+});
+
+test("disabling title and startDate in the title", function () {
+  var result, event = {
+    city: 'Seattle',
+    state: 'WA',
+    country: 'USA',
+    website: 'http://startupweekend.org',
+    start_date: moment('2012-01-01').utc()._d
+  }, titleSettings = {
+    startDate: false,
+    url: false
+  };
+
+  result = testHarness.generateMarkerTitle(event, titleSettings);
+
+  equal(result, "Seattle, WA, USA");
 });

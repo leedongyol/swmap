@@ -119,12 +119,12 @@ SOFTWARE.
    * Given an event object, generate a title suitable
    * for a map marker object
    */
-  generateMarkerTitle = function (event) {
+  generateMarkerTitle = function (event, titleSettings) {
     var titleString;
 
     titleString = getEventTitle(event);
-    titleString += getStartDateFormatted(event);
-    titleString += getURL(event);
+    if (titleSettings.startDate) { titleString += getStartDateFormatted(event); }
+    if (titleSettings.url) { titleString += getURL(event); }
 
     return titleString;
   };
@@ -248,7 +248,7 @@ SOFTWARE.
   /**
    * Given an array of event objects, generate map markers for them
    */
-  generateMapMarkers = function (events, markerSettings) {
+  generateMapMarkers = function (events, markerSettings, titleSettings) {
     var markers = [];
 
     $.each(events, function (idx, event) {
@@ -292,7 +292,7 @@ SOFTWARE.
 
       marker = new mapsApi.Marker({
         position: new mapsApi.LatLng(event.location.lat, event.location.lng),
-        title: generateMarkerTitle(event),
+        title: generateMarkerTitle(event, titleSettings),
         icon: createStyledMarkerImage(markerColor, markerDot),
         shadow: createStyleMarkersShadow()
       });
@@ -339,7 +339,7 @@ SOFTWARE.
     // out those that don't meet the criteria for our map
     eventWorkingSet = filterUnusableEvents(data);
 
-    markers = generateMapMarkers(eventWorkingSet, settings.markerSettings);
+    markers = generateMapMarkers(eventWorkingSet, settings.markerSettings, settings.titleSettings);
     addMarkersToMap(map, markers);
   };
   if (testHarness) { testHarness.processEventData = processEventData; }
@@ -354,10 +354,11 @@ SOFTWARE.
   $.fn.swmap = function (opts) {
     var defaults, settings, apiUrl, domElement,
       defaultMapSettings, userMapSettings, defaultMarkerSettings,
-      userMarkerSettings;
+      userMarkerSettings, userTitleSettings, defaultTitleSettings;
 
     userMapSettings = opts.mapSettings;
     userMarkerSettings = opts.markerSettings;
+    userTitleSettings = opts.TitleSettings;
 
     defaults = {
       url: 'http://swoop.startupweekend.org/events',
@@ -378,12 +379,18 @@ SOFTWARE.
       showDot: true
     };
 
+    defaultTitleSettings = {
+      startDate: true,
+      url: true
+    };
+
     // Grab the client's options and set up options
     // with defaults for settings that weren't specified
     settings = $.extend(defaults, opts);
 
     settings.mapSettings = $.extend(defaultMapSettings, userMapSettings);
     settings.markerSettings = $.extend(defaultMarkerSettings, userMarkerSettings);
+    settings.TitleSettings = $.extend(defaultTitleSettings, userTitleSettings);
 
     // Build the API URL based on query parameters
     // if they are supplied
