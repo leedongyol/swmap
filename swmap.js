@@ -27,7 +27,7 @@ SOFTWARE.
     processEventData, initializeMap, filterUnusableEvents,
     addMarkersToMap, generateMapMarkers, generateMarkerTitle,
     showInfoWindow, getInfoWindowInstance, createStyledMarkerImage,
-    createStyleMarkersShadow;
+    createStyleMarkersShadow, getEventTitle;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -119,17 +119,9 @@ SOFTWARE.
    * for a map marker object
    */
   generateMarkerTitle = function (event) {
-    var titleString, actualUrl, titleTerms = [];
-    titleTerms.push(event.city);
+    var titleString, actualUrl;
 
-    if (event.state && event.state.length > 0) {
-      titleTerms.push(event.state);
-    }
-    if (event.country && event.country.length > 0) {
-      titleTerms.push(event.country);
-    }
-
-    titleString = titleTerms.join(', ');
+    titleString = getEventTitle(event);
 
     if (event.start_date) {
       titleString += "<br />" + moment(event.start_date).utc().format("MMM D, YYYY");
@@ -152,6 +144,23 @@ SOFTWARE.
     return titleString;
   };
   if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
+
+  /**
+   * Given an event object, generate the title
+   */
+  getEventTitle = function (event) {
+    var titleTerms = [];
+    titleTerms.push(event.city);
+
+    if (event.state && event.state.length > 0) {
+      titleTerms.push(event.state);
+    }
+    if (event.country && event.country.length > 0) {
+      titleTerms.push(event.country);
+    }
+
+    return titleTerms.join(', ');
+  };
 
   /**
    * Creates an info window instance if it doesn't already exist
