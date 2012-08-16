@@ -27,7 +27,8 @@ SOFTWARE.
     processEventData, initializeMap, filterUnusableEvents,
     addMarkersToMap, generateMapMarkers, generateMarkerTitle,
     showInfoWindow, getInfoWindowInstance, createStyledMarkerImage,
-    createStyleMarkersShadow, getEventTitle;
+    createStyleMarkersShadow, getEventTitle, getStartDateFormatted,
+    getURL;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -119,28 +120,12 @@ SOFTWARE.
    * for a map marker object
    */
   generateMarkerTitle = function (event) {
-    var titleString, actualUrl;
+    var titleString;
 
     titleString = getEventTitle(event);
+    titleString += getStartDateFormatted(event);
+    titleString += getURL(event);
 
-    if (event.start_date) {
-      titleString += "<br />" + moment(event.start_date).utc().format("MMM D, YYYY");
-    }
-
-    if (event.website && event.website.length > 0) {
-      if (event.website.indexOf('http') < 0) {
-        actualUrl = 'http://' + event.website;
-      } else {
-        actualUrl = event.website;
-      }
-
-      titleString +=
-        "<br /><a target='_blank' href='" +
-        actualUrl +
-        "'>" +
-        event.website +
-        "</a>";
-    }
     return titleString;
   };
   if (testHarness) { testHarness.generateMarkerTitle = generateMarkerTitle; }
@@ -160,6 +145,41 @@ SOFTWARE.
     }
 
     return titleTerms.join(', ');
+  };
+
+  /**
+   * Given an event object, return the start date as a string
+   */
+  getStartDateFormatted = function (event) {
+    var startDateFormatted = "";
+    if (event.start_date) {
+      startDateFormatted = "<br />" + moment(event.start_date).utc().format("MMM D, YYYY");
+    }
+    return startDateFormatted;
+  };
+
+  /**
+   * Given an event object, return the url
+   */
+  getURL = function (event) {
+    var actualUrl, url;
+    url = "";
+    if (event.website && event.website.length > 0) {
+      if (event.website.indexOf('http') < 0) {
+        actualUrl = 'http://' + event.website;
+      } else {
+        actualUrl = event.website;
+      }
+
+      url =
+        "<br /><a target='_blank' href='" +
+        actualUrl +
+        "'>" +
+        event.website +
+        "</a>";
+    }
+
+    return url;
   };
 
   /**
