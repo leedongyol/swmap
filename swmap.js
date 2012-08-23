@@ -275,10 +275,11 @@ SOFTWARE.
 
       marker = new mapsApi.Marker({
         position: new mapsApi.LatLng(event.location.lat, event.location.lng),
-        title: generateMarkerTitle(event),
+        title: generateEventTitle(event),
         icon: createStyledMarkerImage(markerColor, markerDot),
         shadow: createStyleMarkersShadow()
       });
+      marker.eventLink = generateMarkerTitle(event);
 
       markers.push(marker);
     });
@@ -296,7 +297,7 @@ SOFTWARE.
     $.each(markers, function (idx, marker) {
       // Configure event listeners
       mapsApi.event.addListener(marker, 'click', function () {
-        showInfoWindow(marker.title, map, marker);
+        showInfoWindow(marker.eventLink, map, marker);
       });
 
       marker.setMap(map);
