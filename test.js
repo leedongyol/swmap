@@ -146,6 +146,21 @@ test('only takes events with latitude and longitude', function () {
   equal(result.length, 1);
 });
 
+module('generateEventTitle tests');
+
+test('creates a marker hover title with all data available', function () {
+  var result, event = {
+    city: 'Seattle',
+    state: 'WA',
+    country: 'USA'
+  };
+
+  result = testHarness.generateEventTitle(event);
+
+  equal(result, 'Seattle, WA, USA');
+});
+
+
 module('generateMarkerTitle tests');
 
 test('creates a title with all data available', function () {

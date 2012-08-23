@@ -27,7 +27,7 @@ SOFTWARE.
     processEventData, initializeMap, filterUnusableEvents,
     addMarkersToMap, generateMapMarkers, generateMarkerTitle,
     showInfoWindow, getInfoWindowInstance, createStyledMarkerImage,
-    createStyleMarkersShadow;
+    createStyleMarkersShadow, generateEventTitle;
 
   if (window.testHarness) {
     testHarness = window.testHarness;
@@ -115,11 +115,12 @@ SOFTWARE.
   if (testHarness) { testHarness.filterUnusableEvents = filterUnusableEvents; }
 
   /**
-   * Given an event object, generate a title suitable
-   * for a map marker object
+   * Given an event object, generate a title
+   * suitable for the hover state of a marker
    */
-  generateMarkerTitle = function (event) {
-    var titleString, actualUrl, titleTerms = [];
+  generateEventTitle = function (event) {
+    var titleTerms = [];
+
     titleTerms.push(event.city);
 
     if (event.state && event.state.length > 0) {
@@ -129,7 +130,18 @@ SOFTWARE.
       titleTerms.push(event.country);
     }
 
-    titleString = titleTerms.join(', ');
+    return titleTerms.join(', ');
+  };
+  if (testHarness) { testHarness.generateEventTitle = generateEventTitle; }
+
+  /**
+   * Given an event object, generate a title suitable
+   * for a map marker object
+   */
+  generateMarkerTitle = function (event) {
+    var titleString, actualUrl;
+
+    titleString = generateEventTitle(event);
 
     if (event.start_date) {
       titleString += "<br />" + moment(event.start_date).utc().format("MMM D, YYYY");
