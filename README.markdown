@@ -7,6 +7,7 @@ that respects a given query.
 
 ## Changelog
 
+* v1.0.3 - 2012-11-06 - Pass a filter function to override default selection of events to map
 * v1.0.2 - 2012-08-23 - Fixes HTML in marker hover title text
 * v1.0.1 - 2012-07-13 - Minified version
 * v1.0.0 - 2012-07-12 - Initial Release
