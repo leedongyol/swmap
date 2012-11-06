@@ -146,6 +146,40 @@ test('only takes events with latitude and longitude', function () {
   equal(result.length, 1);
 });
 
+test('it accepts a filter function and returns the results of that', function () {
+  var result, events = [
+    {
+      event_status: 'W',
+      location: {
+        lat: 10,  
+        lng: 10
+      }
+    },
+    {
+      event_status: 'G',
+      location: {
+        lat: 10,  
+        lng: 10
+      }
+    },
+    {
+      event_status: 'T',
+      location: {
+        lat: 10,  
+        lng: 10
+      }
+    }
+  ];
+
+  result = testHarness.filterUnusableEvents(events, function (event) {
+    return event.event_status === 'W' ||
+      event.event_status === 'G' ||
+      event.event_status === 'T';
+  });
+
+  equal(result.length, 3);
+});
+
 module('generateEventTitle tests');
 
 test('creates a marker hover title with all data available', function () {

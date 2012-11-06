@@ -100,17 +100,19 @@ SOFTWARE.
    * a Good or Working state, and have location data attached
    * on them
    */
-  filterUnusableEvents = function (events) {
-    var goodEvents = [];
-    $.each(events, function (idx, event) {
-      if (event.event_status && (event.event_status === 'G' || event.event_status === 'W')) {
-        if (event.location && event.location.lat && event.location.lng) {
-          goodEvents.push(event);
-        }
-      }
-    });
+  filterUnusableEvents = function (events, filterFn) {
+    if (typeof filterFn === 'undefined') {
+      filterFn = function (event) {
+        return event.event_status && (
+            event.event_status === 'G' ||
+            event.event_status === 'W'
+          ) && event.location
+          && event.location.lat
+          && event.location.lng;
+      };
+    }
 
-    return goodEvents;
+    return events.filter(filterFn);
   };
   if (testHarness) { testHarness.filterUnusableEvents = filterUnusableEvents; }
 
@@ -321,7 +323,7 @@ SOFTWARE.
 
     // Loop through the events returned from the server and filter
     // out those that don't meet the criteria for our map
-    eventWorkingSet = filterUnusableEvents(data);
+    eventWorkingSet = filterUnusableEvents(data, settings.filterFn);
 
     markers = generateMapMarkers(eventWorkingSet, settings.markerSettings);
     addMarkersToMap(map, markers);
@@ -345,7 +347,15 @@ SOFTWARE.
 
     defaults = {
       url: 'http://swoop.startupweekend.org/events',
-      query: {}
+      query: {},
+      filterFn: function (event) {
+        return event.event_status && (
+            event.event_status === 'G' ||
+            event.event_status === 'W'
+          ) && event.location
+          && event.location.lat
+          && event.location.lng;
+      }
     };
 
     defaultMapSettings = {
