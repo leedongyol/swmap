@@ -104,9 +104,9 @@ SOFTWARE.
     if (typeof filterFn === 'undefined') {
       filterFn = function (event) {
         return event.event_status && (
-            event.event_status === 'G' ||
-            event.event_status === 'W'
-          ) && event.location
+          event.event_status === 'G' ||
+          event.event_status === 'W'
+        ) && event.location
           && event.location.lat
           && event.location.lng;
       };
@@ -350,9 +350,9 @@ SOFTWARE.
       query: {},
       filterFn: function (event) {
         return event.event_status && (
-            event.event_status === 'G' ||
-            event.event_status === 'W'
-          ) && event.location
+          event.event_status === 'G' ||
+          event.event_status === 'W'
+        ) && event.location
           && event.location.lat
           && event.location.lng;
       }
